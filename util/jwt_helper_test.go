@@ -1,6 +1,7 @@
 package util
 
 import (
+	"com.phh/start-web/config"
 	"encoding/json"
 	"fmt"
 	"github.com/cristalhq/jwt/v4"
@@ -10,7 +11,8 @@ import (
 
 // 生成 token
 func TestCreateToken(t *testing.T) {
-	jwtHelper := NewJwtHelper("abc")
+	config := config.NewConfig("../config")
+	jwtHelper := NewJwtHelper(config)
 	claims := UserClaims{
 		RegisteredClaims: jwt.RegisteredClaims{
 			ID:        "1000",
@@ -36,8 +38,9 @@ func TestCreateToken(t *testing.T) {
 
 // 校验token
 func TestVerifyToken(t *testing.T) {
+	config := config.NewConfig("../config")
 	var tk = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxMDAwIiwic3ViIjoidG9tIiwiZXhwIjoxNjUxOTA4MjcyLCJQaG9uZSI6IjE4OTc1MzkxNjE4IiwiUnVsZSI6IiJ9.B9jIbQ0C74KcKOx5I0w0tyOfc2Yc0D5mQdbbccS-M9c"
-	jwtHelper := NewJwtHelper("abc")
+	jwtHelper := NewJwtHelper(config)
 	token, err := jwtHelper.VerifyToken(tk)
 	if err != nil {
 		fmt.Println(err)
