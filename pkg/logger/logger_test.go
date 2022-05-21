@@ -1,10 +1,14 @@
 package logger
 
-import "testing"
+import (
+	"com.phh/start-web/pkg/config"
+	"testing"
+)
 
 // TestZap zap 日志框架
 func TestZap(t *testing.T) {
-	zapLog := newZapLog()
+	var config = config.NewConfig("../../config")
+	zapLog := newZapLog(config)
 	zapLog.Debugf("debug message")
 	zapLog.Infof("info message")
 	zapLog.Warnf("warn message")
@@ -12,7 +16,8 @@ func TestZap(t *testing.T) {
 }
 
 func TestLogger(t *testing.T) {
-	logger := NewLogger()
+	var config = config.NewConfig("../../config")
+	logger := NewLogger(config)
 	logger.Debugf("debug message")
 	logger.Infof("info message")
 	logger.Warnf("warn message")

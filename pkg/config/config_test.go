@@ -8,7 +8,7 @@ import (
 var config *Config
 
 func init() {
-	config = NewConfig(".")
+	config = NewConfig("../../config")
 }
 
 func Test1(t *testing.T) {

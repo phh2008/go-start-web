@@ -1,7 +1,7 @@
 package util
 
 import (
-	"com.phh/start-web/config"
+	"com.phh/start-web/pkg/config"
 	"encoding/json"
 	"fmt"
 	"github.com/cristalhq/jwt/v4"

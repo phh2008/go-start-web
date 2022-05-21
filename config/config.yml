@@ -3,4 +3,12 @@ db:
   url: root:root@tcp(127.0.0.1:3306)/phh?charset=utf8mb4&parseTime=True&loc=Local
 jwt:
   key: abc123
+log:
+  level: debug
+  filename: ./log-error.log
+  maxSize: 50 #mb
+  maxBackups: 10 #保留旧日志文件数量
+  maxAge: 30 #日志保留时间（天）
+  compress: true
+  localTime: true
 

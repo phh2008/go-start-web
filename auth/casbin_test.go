@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"com.phh/start-web/config"
+	"com.phh/start-web/pkg/config"
 	"com.phh/start-web/util"
 	"fmt"
 	"github.com/casbin/casbin/v2"
@@ -11,7 +11,7 @@ import (
 var enforcer *casbin.Enforcer
 
 func init() {
-	config := config.NewConfig("../config")
+	config := config.NewConfig(".././config")
 	db := util.InitDB(config)
 	enforcer = NewCasbinHelper(db, "../config").GetEnforcer()
 }

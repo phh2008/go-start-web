@@ -2,7 +2,8 @@ package app
 
 import (
 	"com.phh/start-web/auth"
-	"com.phh/start-web/config"
+	"com.phh/start-web/pkg/config"
+	"com.phh/start-web/pkg/logger"
 	"com.phh/start-web/util"
 	"com.phh/start-web/web/controller"
 	"github.com/google/wire"
@@ -19,4 +20,5 @@ type AppContext struct {
 	UserApi  *controller.UserController
 	OrderApi *controller.OrderController
 	AuthApi  *controller.AuthController
+	Logger   *logger.Logger
 }

@@ -1,15 +1,27 @@
 package logger
 
 import (
+	"com.phh/start-web/pkg/config"
+	"github.com/google/wire"
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"io"
 	"os"
+	"strings"
 	"time"
 )
 
 var _ SimpleLogger = (*Logger)(nil)
+
+var LoggerSet = wire.NewSet(NewLogger)
+
+var levelMap = map[string]zapcore.Level{
+	"debug": zapcore.DebugLevel,
+	"info":  zapcore.InfoLevel,
+	"warn":  zapcore.WarnLevel,
+	"error": zapcore.ErrorLevel,
+}
 
 type SimpleLogger interface {
 	Debugf(template string, args ...interface{})
@@ -22,23 +34,23 @@ type Logger struct {
 	SimpleLogger
 }
 
-func NewLogger() *Logger {
-	return &Logger{SimpleLogger: newZapLog()}
+func NewLogger(config *config.Config) *Logger {
+	return &Logger{SimpleLogger: newZapLog(config)}
 }
 
 // getWriter
-func getWriter(fileName string) io.Writer {
+func getWriter(config *config.Config) io.Writer {
 	return &lumberjack.Logger{
-		Filename:   fileName,
-		MaxSize:    50, // megabytes
-		MaxBackups: 3,
-		MaxAge:     28, //days
-		LocalTime:  true,
-		Compress:   true, // disabled by default
+		Filename:   config.Viper.GetString("log.filename"),
+		MaxSize:    config.Viper.GetInt("log.maxSize"), // megabytes
+		MaxBackups: config.Viper.GetInt("log.maxBackups"),
+		MaxAge:     config.Viper.GetInt("log.maxAge"), //days
+		LocalTime:  config.Viper.GetBool("log.localTime"),
+		Compress:   config.Viper.GetBool("log.compress"), // disabled by default
 	}
 }
 
-func newZapLog() *zap.SugaredLogger {
+func newZapLog(config *config.Config) *zap.SugaredLogger {
 	// 设置一些基本日志格式 具体含义还比较好理解，直接看zap源码也不难懂
 	//encoder := zapcore.NewJSONEncoder(zapcore.EncoderConfig{
 	encoder := zapcore.NewConsoleEncoder(zapcore.EncoderConfig{
@@ -58,11 +70,11 @@ func newZapLog() *zap.SugaredLogger {
 
 	// 记录什么级别的日志
 	level := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
-		return lvl >= zapcore.DebugLevel
+		return lvl >= levelMap[strings.ToLower(config.Viper.GetString("log.level"))]
 	})
 
 	// 获取 info、error日志文件的io.Writer 抽象 getWriter() 在下方实现
-	writer := zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(getWriter("./log-error.log")))
+	writer := zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(getWriter(config)))
 	// 如果info、debug、error分文件记录，就创建多个 writer
 	// 最后创建具体的Logger
 	core := zapcore.NewTee(

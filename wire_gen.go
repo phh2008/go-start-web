@@ -9,8 +9,9 @@ package main
 import (
 	"com.phh/start-web/app"
 	"com.phh/start-web/auth"
-	"com.phh/start-web/config"
 	"com.phh/start-web/dao"
+	"com.phh/start-web/pkg/config"
+	"com.phh/start-web/pkg/logger"
 	"com.phh/start-web/service"
 	"com.phh/start-web/util"
 	"com.phh/start-web/web/controller"
@@ -48,6 +49,7 @@ func BuildApp(configFolder config.ConfigFolder) *app.AppContext {
 	authController := &controller.AuthController{
 		Casbin: casbinHelper,
 	}
+	loggerLogger := logger.NewLogger(configConfig)
 	appContext := &app.AppContext{
 		Config:   configConfig,
 		DB:       db,
@@ -56,6 +58,7 @@ func BuildApp(configFolder config.ConfigFolder) *app.AppContext {
 		UserApi:  userController,
 		OrderApi: orderController,
 		AuthApi:  authController,
+		Logger:   loggerLogger,
 	}
 	return appContext
 }

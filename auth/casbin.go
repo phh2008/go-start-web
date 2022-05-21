@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"com.phh/start-web/config"
+	"com.phh/start-web/pkg/config"
 	"fmt"
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v3"

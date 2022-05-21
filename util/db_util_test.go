@@ -1,8 +1,8 @@
 package util
 
 import (
-	"com.phh/start-web/config"
 	"com.phh/start-web/entity"
+	"com.phh/start-web/pkg/config"
 	"fmt"
 	"gorm.io/gorm"
 	"testing"

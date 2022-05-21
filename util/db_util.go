@@ -1,8 +1,8 @@
 package util
 
 import (
-	"com.phh/start-web/config"
 	"com.phh/start-web/model"
+	"com.phh/start-web/pkg/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
