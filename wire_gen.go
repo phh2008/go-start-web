@@ -9,10 +9,12 @@ package main
 import (
 	"com.phh/start-web/app"
 	"com.phh/start-web/auth"
-	"com.phh/start-web/dao"
+	"com.phh/start-web/dao/odrdao"
+	"com.phh/start-web/dao/sysdao"
 	"com.phh/start-web/pkg/config"
 	"com.phh/start-web/pkg/logger"
-	"com.phh/start-web/service"
+	"com.phh/start-web/service/odrservice"
+	"com.phh/start-web/service/sysservice"
 	"com.phh/start-web/util"
 	"com.phh/start-web/web/controller"
 )
@@ -27,20 +29,20 @@ func BuildApp(configFolder config.ConfigFolder) *app.AppContext {
 		Db:      db,
 		ConfDir: configFolder,
 	}
-	userDao := &dao.UserDao{
+	userDao := &sysdao.UserDao{
 		Db: db,
 	}
-	userService := &service.UserService{
+	userService := &sysservice.UserService{
 		UserDao: userDao,
 	}
 	userController := &controller.UserController{
 		UserService: userService,
 		Jwt:         jwtHelper,
 	}
-	orderDAO := &dao.OrderDAO{
+	orderDAO := &odrdao.OrderDAO{
 		Db: db,
 	}
-	orderService := &service.OrderService{
+	orderService := &odrservice.OrderService{
 		OrderDao: orderDAO,
 	}
 	orderController := &controller.OrderController{

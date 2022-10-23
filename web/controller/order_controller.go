@@ -2,7 +2,7 @@ package controller
 
 import (
 	"com.phh/start-web/model"
-	"com.phh/start-web/service"
+	"com.phh/start-web/service/odrservice"
 	"com.phh/start-web/util"
 	"fmt"
 	"github.com/google/wire"
@@ -12,7 +12,7 @@ import (
 var OrderSet = wire.NewSet(wire.Struct(new(OrderController), "*"))
 
 type OrderController struct {
-	OrderService *service.OrderService
+	OrderService *odrservice.OrderService
 }
 
 func (a *OrderController) GetById(ctx iris.Context) {

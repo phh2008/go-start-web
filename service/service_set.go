@@ -1,8 +1,12 @@
 package service
 
-import "github.com/google/wire"
+import (
+	"com.phh/start-web/service/odrservice"
+	"com.phh/start-web/service/sysservice"
+	"github.com/google/wire"
+)
 
 var ServiceSet = wire.NewSet(
-	UserSet,
-	OrderSet,
+	sysservice.UserSet,
+	odrservice.OrderSet,
 )

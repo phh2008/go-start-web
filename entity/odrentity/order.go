@@ -1,4 +1,4 @@
-package entity
+package odrentity
 
 import (
 	"com.phh/start-web/util/timeutil"

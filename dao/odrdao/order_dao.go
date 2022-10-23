@@ -1,7 +1,7 @@
-package dao
+package odrdao
 
 import (
-	"com.phh/start-web/entity"
+	"com.phh/start-web/entity/odrentity"
 	"com.phh/start-web/model"
 	"com.phh/start-web/util"
 	"github.com/google/wire"
@@ -14,21 +14,21 @@ type OrderDAO struct {
 	Db *gorm.DB
 }
 
-func (a *OrderDAO) GetById(id int) entity.Order {
-	var order entity.Order
-	a.Db.Model(&entity.Order{}).Take(&order, id)
+func (a *OrderDAO) GetById(id int) odrentity.Order {
+	var order odrentity.Order
+	a.Db.Model(&odrentity.Order{}).Take(&order, id)
 	return order
 }
 
-func (a *OrderDAO) ListByUserId(userId int) []entity.Order {
-	var orders []entity.Order
-	a.Db.Model(&entity.Order{}).Where("user_id=?", userId).Find(&orders)
+func (a *OrderDAO) ListByUserId(userId int) []odrentity.Order {
+	var orders []odrentity.Order
+	a.Db.Model(&odrentity.Order{}).Where("user_id=?", userId).Find(&orders)
 	return orders
 }
 
 func (a *OrderDAO) Query(orderQuery model.OrderQuery) model.Page {
 	db := a.Db
-	db = db.Model(&entity.Order{})
+	db = db.Model(&odrentity.Order{})
 	if orderQuery.Id != 0 {
 		db = db.Where("id=?", orderQuery.Id)
 	}

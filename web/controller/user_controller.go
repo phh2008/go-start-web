@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"com.phh/start-web/entity"
-	"com.phh/start-web/service"
+	"com.phh/start-web/entity/sysentity"
+	"com.phh/start-web/service/sysservice"
 	"com.phh/start-web/util"
 	"github.com/cristalhq/jwt/v4"
 	"github.com/google/wire"
@@ -14,12 +14,12 @@ var UserSet = wire.NewSet(wire.Struct(new(UserController), "UserService", "Jwt")
 
 type UserController struct {
 	Ctx         iris.Context
-	UserService *service.UserService
+	UserService *sysservice.UserService
 	Jwt         *util.JwtHelper
 }
 
 // GetBy : http://localhost:8080/user?id=1
-func (a *UserController) GetBy(id int) entity.User {
+func (a *UserController) GetBy(id int) sysentity.User {
 	return a.UserService.GetById(id)
 }
 

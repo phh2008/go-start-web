@@ -1,8 +1,8 @@
-package service
+package odrservice
 
 import (
-	"com.phh/start-web/dao"
-	"com.phh/start-web/entity"
+	"com.phh/start-web/dao/odrdao"
+	"com.phh/start-web/entity/odrentity"
 	"com.phh/start-web/model"
 	"github.com/google/wire"
 )
@@ -10,14 +10,14 @@ import (
 var OrderSet = wire.NewSet(wire.Struct(new(OrderService), "*"))
 
 type OrderService struct {
-	OrderDao *dao.OrderDAO
+	OrderDao *odrdao.OrderDAO
 }
 
-func (a *OrderService) GetById(id int) entity.Order {
+func (a *OrderService) GetById(id int) odrentity.Order {
 	return a.OrderDao.GetById(id)
 }
 
-func (a *OrderService) ListByUserId(userId int) []entity.Order {
+func (a *OrderService) ListByUserId(userId int) []odrentity.Order {
 	return a.OrderDao.ListByUserId(userId)
 }
 

@@ -1,6 +1,6 @@
 # 数据库配置
 db:
-  url: root:root@tcp(127.0.0.1:3306)/phh?charset=utf8mb4&parseTime=True&loc=Local
+  url: root:root@tcp(127.0.0.1:3306)/go_start_web?charset=utf8mb4&parseTime=True&loc=Local
 jwt:
   key: abc123
 log:

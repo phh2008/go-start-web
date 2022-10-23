@@ -1,15 +1,15 @@
-package service
+package sysservice
 
 import (
-	"com.phh/start-web/dao"
-	"com.phh/start-web/entity"
+	"com.phh/start-web/dao/sysdao"
+	entity "com.phh/start-web/entity/sysentity"
 	"github.com/google/wire"
 )
 
 var UserSet = wire.NewSet(wire.Struct(new(UserService), "*"))
 
 type UserService struct {
-	UserDao *dao.UserDao
+	UserDao *sysdao.UserDao
 }
 
 func (a *UserService) GetById(id int) entity.User {
