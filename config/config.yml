@@ -11,4 +11,12 @@ log:
   maxAge: 30 #日志保留时间（天）
   compress: true
   localTime: true
+cors:
+  allowedOriginPatterns:
+    - https://127.0.0.1:8081
+  allowedMethods: GET,POST,OPTIONS,PUT,DELETE
+  allowedHeaders: Content-Type, Authorization
+  exposeHeaders: Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type, New-Token, New-Expires-At
+  maxAge: 3600s
+  allowCredentials: false
 

@@ -20,6 +20,9 @@ func main() {
 	// wire
 	appCtx := BuildApp(config.ConfigFolder(configFolder))
 	global.Log = appCtx.Logger
+	if err := appCtx.Config.Viper.Unmarshal(&global.Profile); err != nil {
+		panic(err)
+	}
 	global.Log.Infof("----------------- start -----------------")
 	// 初始化 casbin
 	_ = appCtx.Casbin.GetEnforcer()

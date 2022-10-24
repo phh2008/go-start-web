@@ -4,9 +4,17 @@ import (
 	"com.phh/start-web/pkg/global"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
-// Cors 直接放行所有跨域请求并放行所有 OPTIONS 方法
+func IsPreFlightRequest(c *gin.Context) bool {
+	request := c.Request
+	return request.Method == "OPTIONS" &&
+		request.Header.Get("Origin") != "" &&
+		request.Header.Get("Access-Control-Request-Method") != ""
+}
+
+// Cors 放行所有跨域请求
 func Cors() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		method := c.Request.Method
@@ -25,47 +33,40 @@ func Cors() gin.HandlerFunc {
 	}
 }
 
-// CorsByRules 按照配置处理跨域请求
+// CorsByRules 跨域请求
 func CorsByRules() gin.HandlerFunc {
-	// 放行全部
-	allowedOriginPatterns := global.Profile.Cors.AllowedOriginPatterns
+	cors := global.Profile.Cors
+	allowedOriginPatterns := cors.AllowedOriginPatterns
 	if allowedOriginPatterns == nil || len(allowedOriginPatterns) == 0 {
 		return Cors()
 	}
 	return func(c *gin.Context) {
-		whitelist := checkCors(c.GetHeader("origin"))
-
-		// 通过检查, 添加请求头
-		if whitelist != nil {
-			c.Header("Access-Control-Allow-Origin", whitelist.AllowOrigin)
-			c.Header("Access-Control-Allow-Headers", whitelist.AllowHeaders)
-			c.Header("Access-Control-Allow-Methods", whitelist.AllowMethods)
-			c.Header("Access-Control-Expose-Headers", whitelist.ExposeHeaders)
-			if whitelist.AllowCredentials {
-				c.Header("Access-Control-Allow-Credentials", "true")
+		origin := c.GetHeader("Origin")
+		// is cors request
+		if origin == "" {
+			c.Next()
+			return
+		}
+		var isAllow bool
+		for _, v := range allowedOriginPatterns {
+			if "*" == v || origin == v {
+				isAllow = true
+				break
 			}
 		}
-
-		// 严格白名单模式且未通过检查，直接拒绝处理请求
-		if whitelist == nil && global.GT_CONFIG.Cors.Mode == "strict-whitelist" && !(c.Request.Method == "GET" && c.Request.URL.Path == "/health") {
-			c.AbortWithStatus(http.StatusForbidden)
-		} else {
-			// 非严格白名单模式，无论是否通过检查均放行所有 OPTIONS 方法
+		if isAllow {
+			c.Header("Access-Control-Allow-Origin", origin)
+			c.Header("Access-Control-Allow-Headers", cors.AllowedHeaders)
+			c.Header("Access-Control-Allow-Methods", cors.AllowedMethods)
+			c.Header("Access-Control-Expose-Headers", cors.ExposeHeaders)
+			c.Header("Access-Control-Allow-Credentials", strconv.FormatBool(cors.AllowCredentials))
+			c.Header("Access-Control-Max-Age", strconv.FormatInt(cors.MaxAge, 10))
 			if c.Request.Method == "OPTIONS" {
 				c.AbortWithStatus(http.StatusNoContent)
 			}
+		} else {
+			c.AbortWithStatus(http.StatusForbidden)
 		}
-		// 处理请求
 		c.Next()
 	}
-}
-
-func checkCors(currentOrigin string) *config.CORSWhitelist {
-	for _, whitelist := range global.GT_CONFIG.Cors.Whitelist {
-		// 遍历配置中的跨域头，寻找匹配项
-		if currentOrigin == whitelist.AllowOrigin {
-			return &whitelist
-		}
-	}
-	return nil
 }

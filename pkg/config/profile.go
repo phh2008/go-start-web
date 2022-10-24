@@ -29,6 +29,7 @@ type Cors struct {
 	AllowedOriginPatterns []string `yaml:"allowedOriginPatterns" json:"allowedOriginPatterns"`
 	AllowedMethods        string   `yaml:"allowedMethods" json:"allowedMethods"`
 	AllowedHeaders        string   `yaml:"allowedHeaders" json:"allowedHeaders"`
-	MaxAge                int      `yaml:"maxAge" json:"maxAge"`
+	ExposeHeaders         string   `yaml:"exposeHeaders" json:"exposeHeaders"`
+	MaxAge                int64    `yaml:"maxAge" json:"maxAge"`
 	AllowCredentials      bool     `yaml:"allowCredentials" json:"allowCredentials"`
 }

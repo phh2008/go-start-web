@@ -1,8 +1,6 @@
 package config
 
 import (
-	"com.phh/start-web/pkg/global"
-	"fmt"
 	"github.com/google/wire"
 	"github.com/spf13/viper"
 	"log"
@@ -16,7 +14,6 @@ type ConfigFolder string
 type Config struct {
 	ConfigDir ConfigFolder
 	Viper     *viper.Viper
-	Profile   Profile
 }
 
 func NewConfig(configFolder ConfigFolder) *Config {
@@ -37,14 +34,10 @@ func NewConfig(configFolder ConfigFolder) *Config {
 	//		fmt.Println(err)
 	//	}
 	//})
-	if err = vp.Unmarshal(&global.Profile); err != nil {
-		fmt.Println(err)
-	}
 
 	return &Config{
 		ConfigDir: configFolder,
 		Viper:     vp,
-		Profile:   global.Profile,
 	}
 }
 
