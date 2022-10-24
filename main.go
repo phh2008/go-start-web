@@ -2,6 +2,7 @@ package main
 
 import (
 	"com.phh/start-web/pkg/config"
+	"com.phh/start-web/pkg/global"
 	"com.phh/start-web/web/router"
 	"flag"
 	"github.com/gin-gonic/gin"
@@ -17,8 +18,8 @@ func main() {
 	}
 	// wire
 	appCtx := BuildApp(config.ConfigFolder(configFolder))
-	logger := appCtx.Logger
-	logger.Infof("----------------- start -----------------")
+	global.Log = appCtx.Logger
+	global.Log.Infof("----------------- start -----------------")
 	// 初始化 casbin
 	_ = appCtx.Casbin.GetEnforcer()
 	// gin

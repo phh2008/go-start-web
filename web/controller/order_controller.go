@@ -2,8 +2,8 @@ package controller
 
 import (
 	"com.phh/start-web/model"
+	"com.phh/start-web/pkg/global"
 	"com.phh/start-web/service/odrservice"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 	"net/http"
@@ -26,7 +26,7 @@ func (a *OrderController) GetById(ctx *gin.Context) {
 func (a *OrderController) Query(ctx *gin.Context) {
 	user, _ := ctx.Get("user")
 	//TODO 拿到当前登录用户，可把 ctx 传递到 service层
-	fmt.Printf("%#v", user)
+	global.Log.Infof("%#v", user)
 	var orderQuery model.OrderQuery
 	if err := ctx.BindQuery(&orderQuery); err != nil {
 		ctx.JSON(http.StatusOK, model.NewResult("1000", "参数错误", nil))

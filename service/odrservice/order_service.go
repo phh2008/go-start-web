@@ -4,6 +4,7 @@ import (
 	"com.phh/start-web/dao/odrdao"
 	"com.phh/start-web/entity/odrentity"
 	"com.phh/start-web/model"
+	"com.phh/start-web/pkg/global"
 	"github.com/google/wire"
 )
 
@@ -23,5 +24,6 @@ func (a *OrderService) ListByUserId(userId int) []odrentity.Order {
 
 func (a *OrderService) Query(orderQuery model.OrderQuery) model.Result {
 	page := a.OrderDao.Query(orderQuery)
+	global.Log.Infof("%#v", page)
 	return model.Success().SetData(page)
 }
