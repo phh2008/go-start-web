@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"com.phh/start-web/model"
+	"com.phh/start-web/model/result"
 	"com.phh/start-web/service/sysservice"
 	"com.phh/start-web/util"
 	"github.com/cristalhq/jwt/v4"
@@ -21,7 +21,7 @@ type UserController struct {
 // GetBy : http://localhost:8080/user?id=1
 func (a *UserController) GetBy(c *gin.Context) {
 	id := c.GetInt("id")
-	model.OkData(a.UserService.GetById(id), c)
+	result.OkData(a.UserService.GetById(id), c)
 }
 
 // GetToken 登录
@@ -37,5 +37,5 @@ func (a *UserController) GetToken(c *gin.Context) {
 		Phone: "18975391618",
 	}
 	token, _ := a.Jwt.CreateToken(userClaims)
-	model.OkData(token.String(), c)
+	result.OkData(token.String(), c)
 }

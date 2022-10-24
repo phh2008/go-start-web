@@ -2,6 +2,7 @@ package controller
 
 import (
 	"com.phh/start-web/model"
+	"com.phh/start-web/model/result"
 	"com.phh/start-web/pkg/common"
 	"com.phh/start-web/pkg/global"
 	"com.phh/start-web/service/odrservice"
@@ -31,13 +32,8 @@ func (a *OrderController) Query(ctx *gin.Context) {
 	var orderQuery model.OrderQuery
 	valid, errs := common.BindAndValid(ctx, &orderQuery)
 	if !valid {
-		model.FailMsg(errs.Error(), ctx)
+		result.FailMsg(errs.Error(), ctx)
 		return
 	}
-	//if err := ctx.BindQuery(&orderQuery); err != nil {
-	//	ctx.JSON(http.StatusOK, model.NewResult("1000", "参数错误", nil))
-	//	return
-	//}
-	result := a.OrderService.Query(orderQuery)
-	ctx.JSON(http.StatusOK, result)
+	ctx.JSON(http.StatusOK, a.OrderService.Query(orderQuery))
 }
