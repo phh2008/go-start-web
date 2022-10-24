@@ -1,6 +1,8 @@
 package config
 
 import (
+	"com.phh/start-web/pkg/global"
+	"fmt"
 	"github.com/google/wire"
 	"github.com/spf13/viper"
 	"log"
@@ -14,21 +16,35 @@ type ConfigFolder string
 type Config struct {
 	ConfigDir ConfigFolder
 	Viper     *viper.Viper
+	Profile   Profile
 }
 
 func NewConfig(configFolder ConfigFolder) *Config {
-	viper := viper.New()
-	viper.SetConfigName("config")
-	viper.SetConfigType("yml")
-	viper.AddConfigPath(string(configFolder))
-	err := viper.ReadInConfig()
+	vp := viper.New()
+	vp.SetConfigName("config")
+	vp.SetConfigType("yml")
+	vp.AddConfigPath(string(configFolder))
+	err := vp.ReadInConfig()
 	if err != nil {
 		log.Println("加载配置错误")
 		panic(err)
 	}
+
+	//vp.WatchConfig()
+	//vp.OnConfigChange(func(e fsnotify.Event) {
+	//	fmt.Println("config file changed:", e.Name)
+	//	if err = vp.Unmarshal(&profile); err != nil {
+	//		fmt.Println(err)
+	//	}
+	//})
+	if err = vp.Unmarshal(&global.Profile); err != nil {
+		fmt.Println(err)
+	}
+
 	return &Config{
 		ConfigDir: configFolder,
-		Viper:     viper,
+		Viper:     vp,
+		Profile:   global.Profile,
 	}
 }
 
