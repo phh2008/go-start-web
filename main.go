@@ -4,7 +4,7 @@ import (
 	"com.phh/start-web/pkg/config"
 	"com.phh/start-web/web/router"
 	"flag"
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -19,16 +19,10 @@ func main() {
 	appCtx := BuildApp(config.ConfigFolder(configFolder))
 	logger := appCtx.Logger
 	logger.Infof("----------------- start -----------------")
-	// iris
-	app := iris.New()
-	app.Logger().SetLevel("debug")
 	// 初始化 casbin
 	_ = appCtx.Casbin.GetEnforcer()
+	// gin
+	app := gin.Default()
 	router.Register(app, appCtx)
-	_ = app.Run(
-		// 启动端口
-		iris.Addr(":8080"),
-		iris.WithoutServerError(iris.ErrServerClosed),
-		iris.WithOptimizations,
-	)
+	_ = app.Run(":8088")
 }

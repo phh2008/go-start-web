@@ -1,31 +1,32 @@
 package controller
 
 import (
-	"com.phh/start-web/entity/sysentity"
+	"com.phh/start-web/model"
 	"com.phh/start-web/service/sysservice"
 	"com.phh/start-web/util"
 	"github.com/cristalhq/jwt/v4"
+	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"github.com/kataras/iris/v12"
 	"time"
 )
 
 var UserSet = wire.NewSet(wire.Struct(new(UserController), "UserService", "Jwt"))
 
 type UserController struct {
-	Ctx         iris.Context
+	Ctx         *gin.Context
 	UserService *sysservice.UserService
 	Jwt         *util.JwtHelper
 }
 
 // GetBy : http://localhost:8080/user?id=1
-func (a *UserController) GetBy(id int) sysentity.User {
-	return a.UserService.GetById(id)
+func (a *UserController) GetBy(c *gin.Context) {
+	id := c.GetInt("id")
+	model.OkData(a.UserService.GetById(id), c)
 }
 
 // GetToken 登录
-func (a *UserController) GetToken() string {
-	var username = a.Ctx.URLParam("username")
+func (a *UserController) GetToken(c *gin.Context) {
+	var username = c.Query("username")
 	var userClaims = util.UserClaims{
 		RegisteredClaims: jwt.RegisteredClaims{
 			ID:      "1000",
@@ -36,5 +37,5 @@ func (a *UserController) GetToken() string {
 		Phone: "18975391618",
 	}
 	token, _ := a.Jwt.CreateToken(userClaims)
-	return token.String()
+	model.OkData(token.String(), c)
 }

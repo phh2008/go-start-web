@@ -1,7 +1,8 @@
 package util
 
 import (
-	"com.phh/start-web/entity"
+	"com.phh/start-web/entity/odrentity"
+	"com.phh/start-web/entity/sysentity"
 	"com.phh/start-web/pkg/config"
 	"fmt"
 	"gorm.io/gorm"
@@ -19,7 +20,7 @@ func init() {
 func TestQuery1(t *testing.T) {
 	var user []map[string]interface{}
 	db.Table("(?) tmp",
-		db.Model(&entity.User{}).
+		db.Model(&sysentity.User{}).
 			Select("id", "name").
 			Where("age>?", 18),
 	).Where("tmp.name=?", "tom").Find(&user)
@@ -29,12 +30,12 @@ func TestQuery1(t *testing.T) {
 // struct、map条件
 func TestQuery2(t *testing.T) {
 	// struct
-	var users entity.User
-	db.Where(&entity.User{Name: "tom"}).Find(&users)
+	var users sysentity.User
+	db.Where(&sysentity.User{Name: "tom"}).Find(&users)
 	fmt.Println(users)
 
 	// map
-	var users2 entity.User
+	var users2 sysentity.User
 	db.Where(map[string]interface{}{"name": "jack"}).Find(&users2)
 	fmt.Println(users2)
 }
@@ -42,7 +43,7 @@ func TestQuery2(t *testing.T) {
 // order 、group、having
 func TestQuery3(t *testing.T) {
 	var orders []map[string]interface{}
-	db.Model(&entity.Order{}).
+	db.Model(&odrentity.Order{}).
 		Select("user_id", "sum(amount) as totalAmount", "count(user_id) as orderQty").
 		Group("user_id").
 		Having("orderQty>?", 2).
@@ -80,9 +81,9 @@ ORDER BY
 
 // subquery + join
 func TestQuery5(t *testing.T) {
-	var users []entity.User
+	var users []sysentity.User
 	// subquery
-	subquery := db.Model(&entity.Order{}).Select("user_id").Group("user_id").Having("count(1)>?", 6)
+	subquery := db.Model(&odrentity.Order{}).Select("user_id").Group("user_id").Having("count(1)>?", 6)
 	// join
 	db.Table("user a").
 		Select("a.id", "a.name", "a.salt", "a.age", "a.passwd", "a.birthday", "a.created").
@@ -94,20 +95,20 @@ func TestQuery5(t *testing.T) {
 func TestUpdate1(t *testing.T) {
 	//gdb.Model(&MemUser{}).Where("id>=?", 11111).Update("state", "2")
 	// 表达式
-	db.Model(&entity.User{}).Where("id>=?", 1).Update("age", gorm.Expr("age+?", 1))
+	db.Model(&sysentity.User{}).Where("id>=?", 1).Update("age", gorm.Expr("age+?", 1))
 }
 
 // 根据条件和 model 的值进行更新
 func TestUpdate2(t *testing.T) {
 	// 根据条件和 model 的值进行更新
-	var user = entity.User{Id: 1}
+	var user = sysentity.User{Id: 1}
 	db.Model(&user).Where("name = ?", "tom").Update("name", "hello")
 	// UPDATE `user` SET `name`='hello' WHERE name = 'tom' AND `id` = 1
 }
 
 func TestUpdate3(t *testing.T) {
 	// Select 除 passwd 外的所有字段（包括零值字段的所有字段）
-	var user = entity.User{Id: 1}
-	db.Model(&user).Select("*").Omit("passwd").Updates(entity.User{Name: "jinzhu", Passwd: "123", Age: 0})
+	var user = sysentity.User{Id: 1}
+	db.Model(&user).Select("*").Omit("passwd").Updates(sysentity.User{Name: "jinzhu", Passwd: "123", Age: 0})
 	// UPDATE `user` SET `id`=0,`name`='jinzhu',`salt`='',`age`=0,`birthday`='0000-00-00 00:00:00',`created`='0000-00-00 00:00:00',`updated`='0000-00-00 00:00:00' WHERE `id` = 1
 }

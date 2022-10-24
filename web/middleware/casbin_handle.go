@@ -5,20 +5,26 @@ import (
 	"com.phh/start-web/model"
 	"com.phh/start-web/util"
 	"fmt"
-	"github.com/kataras/iris/v12"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-func CasbinHandle(casbinHelper *auth.CasbinHelper) func(ctx iris.Context) {
-	return func(ctx iris.Context) {
+func CasbinHandle(casbinHelper *auth.CasbinHelper) func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
 		// 获取当前用户信息
-		user, ok := ctx.Values().Get("user").(util.UserClaims)
+		u, ok := ctx.Get("user")
 		if !ok {
-			ctx.JSON(model.NewResult("1000", "登录无效", nil))
+			ctx.AbortWithStatusJSON(http.StatusOK, model.NewResult("1000", "登录无效", nil))
+			return
+		}
+		user, ok := u.(util.UserClaims)
+		if !ok {
+			ctx.AbortWithStatusJSON(http.StatusOK, model.NewResult("1000", "登录无效", nil))
 			return
 		}
 		// TODO 当前用户的角色
 		user.Rule = "admin"
-		request := ctx.Request()
+		request := ctx.Request
 		uri := request.URL.Path
 		method := request.Method
 		fmt.Println("rule:", user.Rule, "uri:", uri, "method:", method)
@@ -26,7 +32,7 @@ func CasbinHandle(casbinHelper *auth.CasbinHelper) func(ctx iris.Context) {
 		if ok, _ = enforcer.Enforce(user.Rule, uri, method); ok {
 			ctx.Next()
 		} else {
-			ctx.JSON(model.NewResult("1001", "无权限", nil))
+			ctx.AbortWithStatusJSON(http.StatusOK, model.NewResult("1001", "无权限", nil))
 		}
 	}
 }
