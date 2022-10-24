@@ -3,6 +3,7 @@ package main
 import (
 	"com.phh/start-web/pkg/config"
 	"com.phh/start-web/pkg/global"
+	"com.phh/start-web/web/middleware"
 	"com.phh/start-web/web/router"
 	"flag"
 	"github.com/gin-gonic/gin"
@@ -24,6 +25,8 @@ func main() {
 	_ = appCtx.Casbin.GetEnforcer()
 	// gin
 	app := gin.Default()
+	app.Use(middleware.GinRecovery(true))
+	app.Use(middleware.Translations())
 	router.Register(app, appCtx)
 	_ = app.Run(":8088")
 }

@@ -2,8 +2,8 @@ package model
 
 type Page struct {
 	Count    int64       `json:"count"`
-	PageNo   int         `json:"pageNo" form:"pageNo"`
-	PageSize int         `json:"pageSize" form:"pageSize"`
+	PageNo   int         `json:"pageNo" form:"pageNo" binding:"gt=0"`
+	PageSize int         `json:"pageSize" form:"pageSize" binding:"gt=0,lte=500"`
 	Data     interface{} `json:"data"`
 }
 
