@@ -17,6 +17,6 @@ cors:
   allowedMethods: GET,POST,OPTIONS,PUT,DELETE
   allowedHeaders: Content-Type, Authorization
   exposeHeaders: Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type, New-Token, New-Expires-At
-  maxAge: 3600s
+  maxAge: 3600
   allowCredentials: false
 
