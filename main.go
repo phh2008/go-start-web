@@ -30,6 +30,7 @@ func main() {
 	app := gin.Default()
 	app.Use(middleware.GinRecovery(true))
 	app.Use(middleware.Translations())
+	app.Use(middleware.Cors(global.Profile.Cors))
 	router.Register(app, appCtx)
 	_ = app.Run(":8088")
 }
